@@ -10,19 +10,20 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ['main']
+    branches: [ "main" ]
   pull_request:
-    branches: ['main']
+    branches: [ "main" ]
 
 permissions:
   contents: write
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
         node-version: 18.18.1
@@ -33,19 +34,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-
-    - name: Build with Maven & Sonar
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B -Pprod,war verify package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=${{ github.repository_owner }} -Dsonar.projectKey=${{ github.repository_owner }}_jhipster-maven
+    - name: Build with Maven
+      run: mvn -B -Pprod,war verify package
 
     - uses: actions/upload-artifact@v3
       with:
@@ -55,3 +45,15 @@ jobs:
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@c5ad0fd6b977364190852883b46728f25a9617c3
+
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Sonar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: mvn -B -Pprod initialize sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=${{ github.repository_owner }} -Dsonar.projectKey=${{ github.repository_owner }}_jhipster-maven
