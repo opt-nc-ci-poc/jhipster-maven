@@ -20,8 +20,8 @@ permissions:
 
 jobs:
   build:
-    # runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    # runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -65,10 +65,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker build
-        if: github.ref == 'refs/heads/main'
-        run: |
-          mvn -B -Pprod,war jib:build \
-            -Djib.to.image=ghcr.io/${{ github.repository }}:latest \
-            -Djib.container.creationTime=USE_CURRENT_TIMESTAMP \
-            -Djib.container.labels=org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository}}
+      # - name: Docker build
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     mvn -B -Pprod,war jib:build \
+      #       -Djib.to.image=ghcr.io/${{ github.repository }}:latest \
+      #       -Djib.container.creationTime=USE_CURRENT_TIMESTAMP \
+      #       -Djib.container.labels=org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository}}
