@@ -15,16 +15,13 @@ on:
     branches: ['main']
 
 permissions:
-  contents: write
+  packages: write # Docker
+  contents: write # maven-dependency-submission-action
 
 jobs:
   build:
-    # runs-on: self-hosted
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-
+    runs-on: self-hosted
+    # runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -46,9 +43,8 @@ jobs:
           path: target/*.jar
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-      # Désactivation pour test des self-runner
-      # - name: Update dependency graph
-      #   uses: advanced-security/maven-dependency-submission-action@c5ad0fd6b977364190852883b46728f25a9617c3
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@c5ad0fd6b977364190852883b46728f25a9617c3
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
