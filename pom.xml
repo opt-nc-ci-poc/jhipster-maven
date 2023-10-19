@@ -10,6 +10,7 @@
     <name>Jhipster Gh Maven</name>
     <description>Description for Jhipster Gh Maven</description>
 
+    <!-- force cache hit -->
     <properties>
         <!--
             Build properties
